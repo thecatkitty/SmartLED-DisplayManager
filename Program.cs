@@ -7,7 +7,7 @@ namespace Celones.DisplayManager {
   class Program {
     static void Main(string[] args) {
       Pi.Init<BootstrapWiringPi>();
-      Console.WriteLine("Hello there~ :3");
+      Console.WriteLine("Celones SmartLED Display Manager");
       
       var reset = Pi.Gpio[BcmPin.Gpio04];
       reset.PinMode = GpioPinDriveMode.Output;
@@ -18,16 +18,17 @@ namespace Celones.DisplayManager {
 
       var lcd = new Celones.Device.Pcd8544(Pi.Spi.Channel0, reset, lcdDc, (GpioPin)backlight);
       lcd.Init();
-
-      double br = 0.0;
-      while(true) {
-        System.Threading.Thread.Sleep(50);
+      lcd.Clear();
+      
+      double brightness = 0.0;
+      for(int i = 0; i < lcd.ScreenWidth * lcd.ScreenHeight / 8; i++) {
         lcd.Write(Celones.Device.Pcd8544.PayloadType.Data, 0x55);
-        lcd.Brightness = br;
-        br += 0.01;
-        if(br > 0.99) {
-          br = 0;
+        if(brightness < 1.0) {
+          lcd.Brightness = brightness;
+          lcd.Contrast = brightness;
+          brightness += 0.01;
         }
+        System.Threading.Thread.Sleep(50);
       }
     }
   }
