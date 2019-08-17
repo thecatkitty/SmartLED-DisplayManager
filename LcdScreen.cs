@@ -4,20 +4,20 @@ using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi;
 
 namespace Celones.DisplayManager {
-  class LcdScreen {
+  class LcdScreen : Drawing.ICanvas {
     private Device.Pcd8544 _ctl;
     private GpioPin _bl;
 
     private double _brightness, _contrast;
 
-    private double[] _bmp;
+    private byte[] _bmp;
 
     public LcdScreen(Device.Pcd8544 controller, GpioPin backlight) {
       _ctl = controller;
       _bl = backlight;
 
-      _bmp = new double[Width * Height];
-      Array.Fill(_bmp, 0.0);
+      _bmp = new byte[Width * Height];
+      Array.Fill(_bmp, (byte)0);
     }
 
     public void Init() {
@@ -35,7 +35,7 @@ namespace Celones.DisplayManager {
       for (int index = 0; index < _ctl.DramSizeX * _ctl.DramSizeY; index++) {
         _ctl.Write(0x00);
       }
-      Array.Fill(_bmp, 0.0);
+      Array.Fill(_bmp, (byte)0);
     }
 
     public int Width { get => _ctl.DramSizeX; }
@@ -61,7 +61,8 @@ namespace Celones.DisplayManager {
       }
     }
 
-    private void Update(Rectangle rect) {
+    public void Invalidate(Rectangle rect) {
+      rect.Intersect(new Rectangle(0, 0, Width, Height));
       int yFirst = rect.Top / 8;
       int yLast = (int)Math.Ceiling((double)(rect.Top + rect.Height) / 8.0);
 
@@ -70,25 +71,22 @@ namespace Celones.DisplayManager {
         _ctl.Write(Device.Pcd8544.Instruction.SetXAddress(rect.Left));
         for(int i = 0; i < rect.Width; i++) {
           int data = 0;
-          data |= _bmp[rect.Left + i + (y * 8) * Width] >= 0.5 ? 1 : 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 1) * Width] >= 0.5 ? 2 : 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 2) * Width] >= 0.5 ? 4 : 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 3) * Width] >= 0.5 ? 8 : 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 4) * Width] >= 0.5 ? 16 : 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 5) * Width] >= 0.5 ? 32 : 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 6) * Width] >= 0.5 ? 64 : 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 7) * Width] >= 0.5 ? 128 : 0;
+          data |= _bmp[rect.Left + i + (y * 8 + 0) * Width];
+          data |= _bmp[rect.Left + i + (y * 8 + 1) * Width] << 1;
+          data |= _bmp[rect.Left + i + (y * 8 + 2) * Width] << 2;
+          data |= _bmp[rect.Left + i + (y * 8 + 3) * Width] << 3;
+          data |= _bmp[rect.Left + i + (y * 8 + 4) * Width] << 4;
+          data |= _bmp[rect.Left + i + (y * 8 + 5) * Width] << 5;
+          data |= _bmp[rect.Left + i + (y * 8 + 6) * Width] << 6;
+          data |= _bmp[rect.Left + i + (y * 8 + 7) * Width] << 7;
           _ctl.Write((byte)data);
         }
       }
     }
 
-    public double this[int x, int y] {
+    public byte this[int x, int y] {
       get => _bmp[x + y * Width];
-      set {
-        _bmp[x + y * Width] = value;
-        Update(new Rectangle(x, y, 1, 1));
-      }
+      set => _bmp[x + y * Width] = value;
     }
   }
 }

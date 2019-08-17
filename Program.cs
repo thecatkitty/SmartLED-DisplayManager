@@ -21,6 +21,7 @@ namespace Celones.DisplayManager {
 
       var pcd8544 = new Celones.Device.Pcd8544(Pi.Spi.Channel0, reset, lcdDc);
       var lcd = new LcdScreen(pcd8544, (GpioPin)backlight);
+      var gc = new Drawing.Graphics(lcd);
 
       reset.PinMode = GpioPinDriveMode.Output;
       lcdDc.PinMode = GpioPinDriveMode.Output;
@@ -28,24 +29,23 @@ namespace Celones.DisplayManager {
 
       lcd.Init();
       lcd.Clear();
-
       for(double brightness = 0.0; brightness <= 1.0; brightness += 0.1) {
         lcd.Brightness = brightness;
         lcd.Contrast = brightness;
         System.Threading.Thread.Sleep(50);
       }
       
-      lcd.Clear();
-      int x = 0, y = 0, vx = 1, vy = 1;
-      for(int i = 0; i < lcd.Width * lcd.Height; i++) {
-        lcd[x, y] = 1.0 - lcd[x, y];
-        x += vx;
-        y += vy;
-        if(x == lcd.Width - 1) vx = -1;
-        if(y == lcd.Height - 1) vy = -1;
-        if(x == 0) vx = 1;
-        if(y == 0) vy = 1;
-        System.Threading.Thread.Sleep(10);
+      gc.Canvas.Clear();
+      var rand = new Random();
+      var pen = new Drawing.Pen(1);
+      for (int i = 0; i < 5; i++) {
+        int x1 = rand.Next(gc.Canvas.Width - 1);
+        int x2 = rand.Next(gc.Canvas.Width - 1);
+        int y1 = rand.Next(gc.Canvas.Height - 1);
+        int y2 = rand.Next(gc.Canvas.Height - 1);
+        pen.Size = i + 1;
+        gc.DrawLine(pen, new System.Drawing.Point(x1, y1), new System.Drawing.Point(x2, y2));
+        System.Threading.Thread.Sleep(750);
       }
     }
   }
