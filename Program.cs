@@ -38,14 +38,14 @@ namespace Celones.DisplayManager {
       lcd.Clear();
       int x = 0, y = 0, vx = 1, vy = 1;
       for(int i = 0; i < lcd.Width * lcd.Height; i++) {
-        lcd[x, y] = 1.0;
+        lcd[x, y] = 1.0 - lcd[x, y];
         x += vx;
         y += vy;
         if(x == lcd.Width - 1) vx = -1;
         if(y == lcd.Height - 1) vy = -1;
         if(x == 0) vx = 1;
         if(y == 0) vy = 1;
-        System.Threading.Thread.Sleep(30);
+        System.Threading.Thread.Sleep(10);
       }
     }
   }
