@@ -36,12 +36,22 @@ namespace Celones.DisplayManager {
       }
       
       gc.Canvas.Clear();
-      var rand = new Random();
       var pen = new Drawing.Pen(1);
+      gc.DrawRectangle(pen, new System.Drawing.Rectangle(0, 0, gc.Canvas.Width, gc.Canvas.Height));
+
       for (int i = 1; i <= 6; i++) {
         pen.Size = i;
         gc.DrawLine(pen, new System.Drawing.Point(i * 10, 5), new System.Drawing.Point(i * 10, 20));
         gc.DrawLine(pen, new System.Drawing.Point(i * 10, 5), new System.Drawing.Point(i * 10 - 5, 10));
+        System.Threading.Thread.Sleep(750);
+      }
+      
+      gc.FillRectangle(1, new System.Drawing.Rectangle(0, gc.Canvas.Height / 2, gc.Canvas.Width, gc.Canvas.Height / 2));
+      pen.Color = 0;
+      for (int i = 1; i <= 6; i++) {
+        pen.Size = i;
+        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 30), new System.Drawing.Point(i * 10, 45));
+        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 30), new System.Drawing.Point(i * 10 - 5, 35));
         System.Threading.Thread.Sleep(750);
       }
     }
