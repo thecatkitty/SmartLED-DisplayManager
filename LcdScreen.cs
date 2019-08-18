@@ -17,7 +17,9 @@ namespace Celones.DisplayManager {
       _bl = backlight;
 
       _bmp = new byte[Width * Height];
-      Array.Fill(_bmp, (byte)0);
+      for (int i = 0; i < _bmp.Length; i++) {
+        _bmp[i] = 0;
+      }
     }
 
     public void Init() {
@@ -35,7 +37,9 @@ namespace Celones.DisplayManager {
       for (int index = 0; index < _ctl.DramSizeX * _ctl.DramSizeY; index++) {
         _ctl.Write(0x00);
       }
-      Array.Fill(_bmp, (byte)0);
+      for (int i = 0; i < _bmp.Length; i++) {
+        _bmp[i] = 0;
+      }
     }
 
     public int Width { get => _ctl.DramSizeX; }
@@ -45,7 +49,7 @@ namespace Celones.DisplayManager {
     {
         get { return _brightness; }
         set {
-          _brightness = Math.Clamp(value, 0.0, 1.0);
+          _brightness = Math.Min(Math.Max(value, 0.0), 1.0);
           _bl.PwmRegister = (int)(_brightness * _bl.PwmRange);
         }
     }
@@ -54,7 +58,7 @@ namespace Celones.DisplayManager {
     {
       get { return _contrast; }
       set {
-        _contrast = Math.Clamp(value, 0.0, 1.0);
+        _contrast = Math.Min(Math.Max(value, 0.0), 1.0);
         _ctl.Write(Device.Pcd8544.Instruction.SetOperationMode(instructionSet: Device.Pcd8544.InstructionSet.Extended));
         _ctl.Write(Device.Pcd8544.Instruction.SetOperationVoltage((int)(60 * _contrast)));
         _ctl.Write(Device.Pcd8544.Instruction.SetOperationMode(instructionSet: Device.Pcd8544.InstructionSet.Basic));

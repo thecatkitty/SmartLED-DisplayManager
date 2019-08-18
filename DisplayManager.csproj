@@ -1,12 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>net4.6.1</TargetFramework>
+
+    <Copyright>© 2019 Mateusz Karcz</Copyright>
+    <AssemblyTitle>Celones SmartLED Display Manager</AssemblyTitle>
+    <AssemblyName>Celones.DisplayManager</AssemblyName>
+    <Version>0.1.0</Version>
+    <Authors>Mateusz Karcz</Authors>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="4.5.1" />
     <PackageReference Include="Unosquare.Raspberry.IO" Version="0.24.0" />
     <PackageReference Include="Unosquare.WiringPi" Version="0.4.2" />
   </ItemGroup>
