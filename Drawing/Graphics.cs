@@ -3,12 +3,14 @@ using System.Drawing;
 
 namespace Celones.Drawing {
   class Graphics {
+    private ICanvas _canvas;
     private System.Drawing.Graphics _gc;
 
-    public ICanvas Canvas {get; set;}
+    public ICanvas Canvas {get => _canvas;}
+    public System.Drawing.Graphics GdiPlus {get => _gc;}
 
     public Graphics(ICanvas canvas) {
-      Canvas = canvas;
+      _canvas = canvas;
       _gc = System.Drawing.Graphics.FromImage(Canvas.Image);
     }
 

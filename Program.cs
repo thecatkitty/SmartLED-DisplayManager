@@ -37,6 +37,7 @@ namespace Celones.DisplayManager {
       }
       
       var pen = new Pen(Color.Black);
+      var brush = new SolidBrush(Color.Black);
       gc.Canvas.Clear();
       gc.DrawRectangle(pen, new Rectangle(0, 0, gc.Canvas.Width - 1, gc.Canvas.Height - 1));
 
@@ -47,7 +48,7 @@ namespace Celones.DisplayManager {
         System.Threading.Thread.Sleep(750);
       }
       
-      gc.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, gc.Canvas.Height / 2, gc.Canvas.Width, gc.Canvas.Height / 2));
+      gc.FillRectangle(brush, new Rectangle(0, gc.Canvas.Height / 2, gc.Canvas.Width, gc.Canvas.Height / 2));
       pen.Color = Color.White;
       for (int i = 1; i <= 6; i++) {
         pen.Width = i;
@@ -55,6 +56,13 @@ namespace Celones.DisplayManager {
         gc.DrawLine(pen, new Point(i * 10, 30), new Point(i * 10 - 5, 35));
         System.Threading.Thread.Sleep(750);
       }
+      
+      var fontFamily = new FontFamily("/opt/celones/DisplayManager/#latomed");
+      var font = new Font(fontFamily, 12);
+      gc.Canvas.Clear();
+      gc.GdiPlus.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+      gc.GdiPlus.DrawString("OwO", font, brush, new PointF(5, 24));
+      gc.Canvas.Invalidate(new Rectangle(0, 0, gc.Canvas.Width, gc.Canvas.Height));
     }
   }
 }
