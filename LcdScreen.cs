@@ -10,16 +10,13 @@ namespace Celones.DisplayManager {
 
     private double _brightness, _contrast;
 
-    private byte[] _bmp;
+    private Bitmap _img;
 
     public LcdScreen(Device.Pcd8544 controller, GpioPin backlight) {
       _ctl = controller;
       _bl = backlight;
-
-      _bmp = new byte[Width * Height];
-      for (int i = 0; i < _bmp.Length; i++) {
-        _bmp[i] = 0;
-      }
+      
+      _img = new Bitmap(Width, Height);
     }
 
     public void Init() {
@@ -37,8 +34,10 @@ namespace Celones.DisplayManager {
       for (int index = 0; index < _ctl.DramSizeX * _ctl.DramSizeY; index++) {
         _ctl.Write(0x00);
       }
-      for (int i = 0; i < _bmp.Length; i++) {
-        _bmp[i] = 0;
+      for (int x = 0; x < Width; x++) {
+        for (int y = 0; y < Height; y++) {
+          _img.SetPixel(x, y, Color.White);
+        }
       }
     }
 
@@ -75,22 +74,21 @@ namespace Celones.DisplayManager {
         _ctl.Write(Device.Pcd8544.Instruction.SetXAddress(rect.Left));
         for(int i = 0; i < rect.Width; i++) {
           int data = 0;
-          data |= _bmp[rect.Left + i + (y * 8 + 0) * Width];
-          data |= _bmp[rect.Left + i + (y * 8 + 1) * Width] << 1;
-          data |= _bmp[rect.Left + i + (y * 8 + 2) * Width] << 2;
-          data |= _bmp[rect.Left + i + (y * 8 + 3) * Width] << 3;
-          data |= _bmp[rect.Left + i + (y * 8 + 4) * Width] << 4;
-          data |= _bmp[rect.Left + i + (y * 8 + 5) * Width] << 5;
-          data |= _bmp[rect.Left + i + (y * 8 + 6) * Width] << 6;
-          data |= _bmp[rect.Left + i + (y * 8 + 7) * Width] << 7;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 0).GetBrightness() < 0.5 ? 1 : 0;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 1).GetBrightness() < 0.5 ? 2 : 0;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 2).GetBrightness() < 0.5 ? 4 : 0;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 3).GetBrightness() < 0.5 ? 8 : 0;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 4).GetBrightness() < 0.5 ? 16 : 0;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 5).GetBrightness() < 0.5 ? 32 : 0;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 6).GetBrightness() < 0.5 ? 64 : 0;
+          data |= _img.GetPixel(rect.Left + i, y * 8 + 7).GetBrightness() < 0.5 ? 128 : 0;
           _ctl.Write((byte)data);
         }
       }
     }
 
-    public byte this[int x, int y] {
-      get => _bmp[x + y * Width];
-      set => _bmp[x + y * Width] = value;
+    public Image Image {
+      get => _img;
     }
   }
 }

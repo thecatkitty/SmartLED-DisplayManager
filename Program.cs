@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi;
@@ -35,23 +36,23 @@ namespace Celones.DisplayManager {
         System.Threading.Thread.Sleep(50);
       }
       
+      var pen = new Pen(Color.Black);
       gc.Canvas.Clear();
-      var pen = new Drawing.Pen(1);
-      gc.DrawRectangle(pen, new System.Drawing.Rectangle(0, 0, gc.Canvas.Width, gc.Canvas.Height));
+      gc.DrawRectangle(pen, new Rectangle(0, 0, gc.Canvas.Width - 1, gc.Canvas.Height - 1));
 
       for (int i = 1; i <= 6; i++) {
-        pen.Size = i;
-        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 5), new System.Drawing.Point(i * 10, 20));
-        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 5), new System.Drawing.Point(i * 10 - 5, 10));
+        pen.Width = i;
+        gc.DrawLine(pen, new Point(i * 10, 5), new Point(i * 10, 20));
+        gc.DrawLine(pen, new Point(i * 10, 5), new Point(i * 10 - 5, 10));
         System.Threading.Thread.Sleep(750);
       }
       
-      gc.FillRectangle(1, new System.Drawing.Rectangle(0, gc.Canvas.Height / 2, gc.Canvas.Width, gc.Canvas.Height / 2));
-      pen.Color = 0;
+      gc.FillRectangle(new SolidBrush(Color.Black), new Rectangle(0, gc.Canvas.Height / 2, gc.Canvas.Width, gc.Canvas.Height / 2));
+      pen.Color = Color.White;
       for (int i = 1; i <= 6; i++) {
-        pen.Size = i;
-        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 30), new System.Drawing.Point(i * 10, 45));
-        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 30), new System.Drawing.Point(i * 10 - 5, 35));
+        pen.Width = i;
+        gc.DrawLine(pen, new Point(i * 10, 30), new Point(i * 10, 45));
+        gc.DrawLine(pen, new Point(i * 10, 30), new Point(i * 10 - 5, 35));
         System.Threading.Thread.Sleep(750);
       }
     }

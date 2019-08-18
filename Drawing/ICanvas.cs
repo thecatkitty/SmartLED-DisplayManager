@@ -5,7 +5,7 @@ namespace Celones.Drawing {
     int Width {get;}
     int Height {get;}
 
-    byte this[int x, int y] {get; set;}
+    Image Image {get;}
 
     void Clear();
     void Invalidate(Rectangle rect);
