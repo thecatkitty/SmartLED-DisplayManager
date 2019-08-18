@@ -38,13 +38,10 @@ namespace Celones.DisplayManager {
       gc.Canvas.Clear();
       var rand = new Random();
       var pen = new Drawing.Pen(1);
-      for (int i = 0; i < 5; i++) {
-        int x1 = rand.Next(gc.Canvas.Width - 1);
-        int x2 = rand.Next(gc.Canvas.Width - 1);
-        int y1 = rand.Next(gc.Canvas.Height - 1);
-        int y2 = rand.Next(gc.Canvas.Height - 1);
-        pen.Size = i + 1;
-        gc.DrawLine(pen, new System.Drawing.Point(x1, y1), new System.Drawing.Point(x2, y2));
+      for (int i = 1; i <= 6; i++) {
+        pen.Size = i;
+        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 5), new System.Drawing.Point(i * 10, 20));
+        gc.DrawLine(pen, new System.Drawing.Point(i * 10, 5), new System.Drawing.Point(i * 10 - 5, 10));
         System.Threading.Thread.Sleep(750);
       }
     }
