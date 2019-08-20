@@ -7,18 +7,15 @@ using Unosquare.WiringPi;
 namespace Celones.DisplayManager {
   class Program {
     static void Main(string[] args) {
+      // Hardware initialization
       Pi.Init<BootstrapWiringPi>();
       Console.WriteLine("Celones SmartLED Display Manager");
-      using (var systemInfo = Unosquare.RaspberryIO.Computer.SystemInfo.Instance)
-      {
-        Console.WriteLine(string.Format(
-          "Raspberry Pi model {0} ({1}), {2} operating system",
-          systemInfo.BoardModel, systemInfo.MemorySize, systemInfo.OperatingSystem.SysName));
-      }
+      Console.WriteLine(Pi.Info.ToString());
       
       var reset = Pi.Gpio[BcmPin.Gpio04];
       var lcdDc = Pi.Gpio[BcmPin.Gpio22];
       var backlight = Pi.Gpio[BcmPin.Gpio18];
+      var butt1 = Pi.Gpio[BcmPin.Gpio20];
 
       var pcd8544 = new Celones.Device.Pcd8544(Pi.Spi.Channel0, reset, lcdDc);
       var lcd = new LcdScreen(pcd8544, (GpioPin)backlight);
@@ -27,6 +24,7 @@ namespace Celones.DisplayManager {
       reset.PinMode = GpioPinDriveMode.Output;
       lcdDc.PinMode = GpioPinDriveMode.Output;
       backlight.PinMode = GpioPinDriveMode.Output;
+      butt1.PinMode = GpioPinDriveMode.Input;
 
       lcd.Init();
       lcd.Clear();
@@ -36,6 +34,7 @@ namespace Celones.DisplayManager {
         System.Threading.Thread.Sleep(50);
       }
       
+      // Graphics demo
       var pen = new Pen(Color.Black);
       var brush = new SolidBrush(Color.Black);
       gc.Canvas.Clear();
@@ -57,12 +56,11 @@ namespace Celones.DisplayManager {
         System.Threading.Thread.Sleep(750);
       }
 
+      // Font demo
       var ifc = new System.Drawing.Text.InstalledFontCollection();
-      for (int i = 0; i < ifc.Families.Length; i++)
-      {
+      for (int i = 0; i < ifc.Families.Length; i++) {
         var fontFamily = ifc.Families[i];
-        if (fontFamily.IsStyleAvailable(FontStyle.Regular))
-        {
+        if (fontFamily.IsStyleAvailable(FontStyle.Regular)) {
           var font = new Font(fontFamily, 8);
           gc.Canvas.Clear();
           gc.GdiPlus.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
@@ -71,6 +69,16 @@ namespace Celones.DisplayManager {
           System.Threading.Thread.Sleep(1500);
         }
       }
+
+      // Buttons demo
+      var color = Color.White;
+      var button = new Unosquare.RaspberryIO.Peripherals.Button(butt1, GpioPinResistorPullMode.PullUp); // 20, 26, 19, 0
+      button.Pressed += (object sender, EventArgs e) => {
+        gc.GdiPlus.Clear(color);
+        gc.Canvas.Invalidate(new Rectangle(0, 0, gc.Canvas.Width, gc.Canvas.Height));
+        color = color == Color.Black ? Color.White : Color.Black;
+      };
+      System.Threading.Thread.Sleep(5000);
     }
   }
 }
