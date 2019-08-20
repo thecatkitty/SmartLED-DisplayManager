@@ -56,13 +56,21 @@ namespace Celones.DisplayManager {
         gc.DrawLine(pen, new Point(i * 10, 30), new Point(i * 10 - 5, 35));
         System.Threading.Thread.Sleep(750);
       }
-      
-      var fontFamily = new FontFamily("/opt/celones/DisplayManager/#latomed");
-      var font = new Font(fontFamily, 12);
-      gc.Canvas.Clear();
-      gc.GdiPlus.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
-      gc.GdiPlus.DrawString("OwO", font, brush, new PointF(5, 24));
-      gc.Canvas.Invalidate(new Rectangle(0, 0, gc.Canvas.Width, gc.Canvas.Height));
+
+      var ifc = new System.Drawing.Text.InstalledFontCollection();
+      for (int i = 0; i < ifc.Families.Length; i++)
+      {
+        var fontFamily = ifc.Families[i];
+        if (fontFamily.IsStyleAvailable(FontStyle.Regular))
+        {
+          var font = new Font(fontFamily, 8);
+          gc.Canvas.Clear();
+          gc.GdiPlus.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+          gc.GdiPlus.DrawString(fontFamily.Name, font, brush, new PointF(0, 12));
+          gc.Canvas.Invalidate(new Rectangle(0, 0, gc.Canvas.Width, gc.Canvas.Height));
+          System.Threading.Thread.Sleep(1500);
+        }
+      }
     }
   }
 }
