@@ -1,12 +1,13 @@
 using System.Drawing;
 using System.Collections;
+using System.Collections.Generic;
 using Portable.Xaml.Markup;
 
 namespace Celones.ONUI {
   public class Menu : ItemsControl {
 
     public Menu() {
-      Items = new ArrayList();
+      Items = new List<Control>();
     }
 
     public override void OnRender(Graphics graphics) {
@@ -31,9 +32,9 @@ namespace Celones.ONUI {
   [ContentProperty("Header")]
   public class MenuItem : ItemsControl, IHeaderedControl {
     public MenuItem() {
-      Items = new ArrayList();
+      Items = new List<Control>();
     }
-
+    
     public System.Windows.Input.ICommand Command {get; set;}
     public bool IsCheckable {get; set;}
     public string Header {get; set;}

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Portable.Xaml.Markup;
 
 namespace Celones.ONUI {
@@ -17,7 +18,7 @@ namespace Celones.ONUI {
   public class ItemsControl : Control {
     public ItemsControl() {}
 
-    public IList Items {get; set;}
+    public IList<Control> Items {get; set;}
   }
 
   public interface IHeaderedControl {

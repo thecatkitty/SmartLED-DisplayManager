@@ -28,8 +28,18 @@ namespace Celones.ONUI {
       format.Alignment = StringAlignment.Center;
       Lcd.Graphics.DrawString(Root.Header, font, brush, new RectangleF(0, -2, Lcd.Width, 12), format);
 
-      ((ONUI.Menu)Root.Items[0]).SelectedItem = (MenuItem)((ONUI.Menu)Root.Items[0]).Items[0];
-      ((Control)Root.Items[0]).OnRender(Lcd.Graphics);
+      foreach (var item in Root.Items) {
+        if (item is ONUI.Menu) {
+          var menu = (ONUI.Menu)item;
+          if (menu.Items.Count > 0) {
+            menu.SelectedItem = (ONUI.MenuItem)menu.Items[0];
+          }
+        }
+      }
+
+      foreach (var item in Root.Items) {
+        item.OnRender(Lcd.Graphics);
+      }
       Lcd.Update();
     }
   }

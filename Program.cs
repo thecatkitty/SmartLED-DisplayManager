@@ -23,7 +23,6 @@ namespace Celones.DisplayManager {
       Lcd = new LcdScreen(new Celones.Device.Pcd8544(Pi.Spi.Channel0, Pins.LcdReset, Pins.LcdDc), (GpioPin)Pins.LcdBacklight);
 
       Lcd.Init();
-      /*
       Lcd.Clear();
       for(double brightness = 0.0; brightness <= 1.0; brightness += 0.1) {
         Lcd.Brightness = brightness;
@@ -69,13 +68,6 @@ namespace Celones.DisplayManager {
           Lcd.Update();
           System.Threading.Thread.Sleep(1500);
         });
-
-      // Buttons demo
-      ClearColor = Color.White;
-      ButtonA = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonA, GpioPinResistorPullMode.PullUp);
-      ButtonA.Pressed += ButtonA_Pressed;
-      System.Threading.Thread.Sleep(5000);
-      ButtonA.Pressed -= ButtonA_Pressed;*/
 
       // Menu demo
       ButtonA = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonA, GpioPinResistorPullMode.PullUp);
