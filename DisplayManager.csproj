@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Portable.Xaml" Version="0.24.0" />
     <PackageReference Include="Unosquare.Raspberry.IO" Version="0.24.0" />
     <PackageReference Include="Unosquare.WiringPi" Version="0.4.2" />
     <PackageReference Include="Unosquare.RaspberryIO.Peripherals" Version="0.4.1" />

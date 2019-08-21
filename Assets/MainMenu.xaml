@@ -1,0 +1,16 @@
+<Page xmlns="http://schemas.celones.pl/xaml/2019/onui" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Page.Header>Main menu</Page.Header>
+ <Page.Items>
+  <Menu>
+   <MenuItem>Graphics demo</MenuItem>
+   <MenuItem>
+    <MenuItem.Header>System info</MenuItem.Header>
+    <MenuItem.Items>
+     <MenuItem>Hardware</MenuItem>
+     <MenuItem>Software</MenuItem>
+    </MenuItem.Items>
+   </MenuItem>
+   <MenuItem>Shutdown</MenuItem> 
+  </Menu>
+ </Page.Items>
+</Page>

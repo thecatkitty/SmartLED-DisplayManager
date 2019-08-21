@@ -4,11 +4,12 @@ using System.Linq;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi;
+using Portable.Xaml;
 
 namespace Celones.DisplayManager {
   class Program {
     static LcdScreen Lcd;
-    static Unosquare.RaspberryIO.Peripherals.Button ButtonA;
+    static Unosquare.RaspberryIO.Peripherals.Button ButtonA, ButtonB, ButtonC, ButtonD;
 
     static Color ClearColor;
 
@@ -22,6 +23,7 @@ namespace Celones.DisplayManager {
       Lcd = new LcdScreen(new Celones.Device.Pcd8544(Pi.Spi.Channel0, Pins.LcdReset, Pins.LcdDc), (GpioPin)Pins.LcdBacklight);
 
       Lcd.Init();
+      /*
       Lcd.Clear();
       for(double brightness = 0.0; brightness <= 1.0; brightness += 0.1) {
         Lcd.Brightness = brightness;
@@ -73,6 +75,22 @@ namespace Celones.DisplayManager {
       ButtonA = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonA, GpioPinResistorPullMode.PullUp);
       ButtonA.Pressed += ButtonA_Pressed;
       System.Threading.Thread.Sleep(5000);
+      ButtonA.Pressed -= ButtonA_Pressed;*/
+
+      // Menu demo
+      ButtonA = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonA, GpioPinResistorPullMode.PullUp);
+      ButtonB = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonB, GpioPinResistorPullMode.PullUp);
+      ButtonC = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonC, GpioPinResistorPullMode.PullUp);
+      ButtonD = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonD, GpioPinResistorPullMode.PullUp);
+
+      var ui = new ONUI.UI(AssemblyDirectory + "/Assets/MainMenu.xaml");
+      ui.Lcd = Lcd;
+      ui.BackButton = ButtonA;
+      ui.OkButton = ButtonB;
+      ui.DownButton = ButtonC;
+      ui.UpButton = ButtonD;
+      ui.Show();
+
       System.Environment.Exit(0);
     }
 
@@ -80,6 +98,15 @@ namespace Celones.DisplayManager {
       Lcd.Graphics.Clear(ClearColor);
       Lcd.Update();
       ClearColor = ClearColor == Color.Black ? Color.White : Color.Black;
+    }
+
+    public static string AssemblyDirectory {
+      get {
+        string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+        UriBuilder uri = new UriBuilder(codeBase);
+        string path = Uri.UnescapeDataString(uri.Path);
+        return System.IO.Path.GetDirectoryName(path);
+      }
     }
   }
 }
