@@ -4,19 +4,21 @@ using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi;
 
 namespace Celones.DisplayManager {
-  class LcdScreen : Drawing.ICanvas {
+  class LcdScreen : ICanvas {
     private Device.Pcd8544 _ctl;
     private GpioPin _bl;
 
     private double _brightness, _contrast;
 
     private Bitmap _img;
+    private Graphics _gc;
 
     public LcdScreen(Device.Pcd8544 controller, GpioPin backlight) {
       _ctl = controller;
       _bl = backlight;
       
       _img = new Bitmap(Width, Height);
+      _gc = Graphics.FromImage(_img);
     }
 
     public void Init() {
@@ -64,7 +66,11 @@ namespace Celones.DisplayManager {
       }
     }
 
-    public void Invalidate(Rectangle rect) {
+    public void Update() {
+      Update(new Rectangle(0, 0, Width, Height));
+    }
+
+    public void Update(Rectangle rect) {
       rect.Intersect(new Rectangle(0, 0, Width, Height));
       int yFirst = rect.Top / 8;
       int yLast = (int)Math.Ceiling((double)(rect.Top + rect.Height) / 8.0);
@@ -87,8 +93,8 @@ namespace Celones.DisplayManager {
       }
     }
 
-    public Image Image {
-      get => _img;
+    public Graphics Graphics {
+      get => _gc;
     }
   }
 }

@@ -1,13 +1,14 @@
 using System.Drawing;
 
-namespace Celones.Drawing {
+namespace Celones {
   interface ICanvas {
     int Width {get;}
     int Height {get;}
 
-    Image Image {get;}
+    Graphics Graphics {get;}
 
     void Clear();
-    void Invalidate(Rectangle rect);
+    void Update();
+    void Update(Rectangle rect);
   }
 }
