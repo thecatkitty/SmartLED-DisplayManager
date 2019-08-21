@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi;
@@ -55,17 +56,17 @@ namespace Celones.DisplayManager {
       }
 
       // Font demo
-      var ifc = new System.Drawing.Text.InstalledFontCollection();
-      for (int i = 0; i < ifc.Families.Length; i++) {
-        var fontFamily = ifc.Families[i];
-        if (fontFamily.IsStyleAvailable(FontStyle.Regular)) {
-          var font = new Font(fontFamily, 8);
+      var fonts = new System.Drawing.Text.InstalledFontCollection();
+      fonts.Families
+        .Where(family => family.IsStyleAvailable(FontStyle.Regular))
+        .OrderBy(family => family.Name)
+        .ToList().ForEach(family => {
+          var font = new Font(family, 8);
           Lcd.Clear();
-          Lcd.Graphics.DrawString(fontFamily.Name, font, brush, new PointF(0, 12));
+          Lcd.Graphics.DrawString(family.Name, font, brush, new RectangleF(0, 0, Lcd.Width, Lcd.Height));
           Lcd.Update();
           System.Threading.Thread.Sleep(1500);
-        }
-      }
+        });
 
       // Buttons demo
       ClearColor = Color.White;
