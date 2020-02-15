@@ -18,4 +18,14 @@
     <PackageReference Include="Unosquare.RaspberryIO.Peripherals" Version="0.4.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Simulation\ControlPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>
