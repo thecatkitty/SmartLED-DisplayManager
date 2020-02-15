@@ -33,6 +33,10 @@ namespace Celones.DisplayManager
 
                 Lcd = new LcdScreen(new Device.Pcd8544(ctl, ctl, ctl));
                 Lcd.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SingleBitPerPixelGridFit;
+                ButtonA = sim.aButton;
+                ButtonB = sim.bButton;
+                ButtonC = sim.cButton;
+                ButtonD = sim.dButton;
 
                 sim.screenImage.Image = ctl.Image;
                 sim.screenImage.BackColor = Color.CadetBlue;
@@ -51,6 +55,8 @@ namespace Celones.DisplayManager
                 ButtonC = new Button(Pins.ButtonC);
                 ButtonD = new Button(Pins.ButtonD);
             }
+
+            ButtonA.Pressed += ButtonA_Pressed;
 
             Lcd.Init();
             Lcd.Clear();

@@ -12,10 +12,10 @@ namespace Celones.DisplayManager.Simulation
 {
     public class ControlPanel : Form
     {
-        private Button aButton;
-        private Button dButton;
-        private Button bButton;
-        private Button cButton;
+        public Button aButton;
+        public Button dButton;
+        public Button bButton;
+        public Button cButton;
         private Timer refresher;
         private IContainer components;
         public PixelBox screenImage;
@@ -28,41 +28,19 @@ namespace Celones.DisplayManager.Simulation
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.aButton = new System.Windows.Forms.Button();
-            this.dButton = new System.Windows.Forms.Button();
-            this.bButton = new System.Windows.Forms.Button();
-            this.cButton = new System.Windows.Forms.Button();
             this.refresher = new System.Windows.Forms.Timer(this.components);
+            this.cButton = new Celones.DisplayManager.Simulation.Button();
+            this.bButton = new Celones.DisplayManager.Simulation.Button();
+            this.dButton = new Celones.DisplayManager.Simulation.Button();
+            this.aButton = new Celones.DisplayManager.Simulation.Button();
             this.screenImage = new Celones.DisplayManager.Simulation.PixelBox();
             ((System.ComponentModel.ISupportInitialize)(this.screenImage)).BeginInit();
             this.SuspendLayout();
             // 
-            // aButton
+            // refresher
             // 
-            this.aButton.Location = new System.Drawing.Point(12, 114);
-            this.aButton.Name = "aButton";
-            this.aButton.Size = new System.Drawing.Size(35, 23);
-            this.aButton.TabIndex = 1;
-            this.aButton.Text = "A";
-            this.aButton.UseVisualStyleBackColor = true;
-            // 
-            // dButton
-            // 
-            this.dButton.Location = new System.Drawing.Point(144, 114);
-            this.dButton.Name = "dButton";
-            this.dButton.Size = new System.Drawing.Size(35, 23);
-            this.dButton.TabIndex = 2;
-            this.dButton.Text = "D";
-            this.dButton.UseVisualStyleBackColor = true;
-            // 
-            // bButton
-            // 
-            this.bButton.Location = new System.Drawing.Point(56, 114);
-            this.bButton.Name = "bButton";
-            this.bButton.Size = new System.Drawing.Size(35, 23);
-            this.bButton.TabIndex = 3;
-            this.bButton.Text = "B";
-            this.bButton.UseVisualStyleBackColor = true;
+            this.refresher.Interval = 50;
+            this.refresher.Tick += new System.EventHandler(this.refresher_Tick);
             // 
             // cButton
             // 
@@ -70,13 +48,35 @@ namespace Celones.DisplayManager.Simulation
             this.cButton.Name = "cButton";
             this.cButton.Size = new System.Drawing.Size(35, 23);
             this.cButton.TabIndex = 4;
-            this.cButton.Text = "C";
+            this.cButton.Text = "▼";
             this.cButton.UseVisualStyleBackColor = true;
             // 
-            // refresher
+            // bButton
             // 
-            this.refresher.Interval = 50;
-            this.refresher.Tick += new System.EventHandler(this.refresher_Tick);
+            this.bButton.Location = new System.Drawing.Point(56, 114);
+            this.bButton.Name = "bButton";
+            this.bButton.Size = new System.Drawing.Size(35, 23);
+            this.bButton.TabIndex = 3;
+            this.bButton.Text = "▶";
+            this.bButton.UseVisualStyleBackColor = true;
+            // 
+            // dButton
+            // 
+            this.dButton.Location = new System.Drawing.Point(144, 114);
+            this.dButton.Name = "dButton";
+            this.dButton.Size = new System.Drawing.Size(35, 23);
+            this.dButton.TabIndex = 2;
+            this.dButton.Text = "▲";
+            this.dButton.UseVisualStyleBackColor = true;
+            // 
+            // aButton
+            // 
+            this.aButton.Location = new System.Drawing.Point(12, 114);
+            this.aButton.Name = "aButton";
+            this.aButton.Size = new System.Drawing.Size(35, 23);
+            this.aButton.TabIndex = 1;
+            this.aButton.Text = "◀";
+            this.aButton.UseVisualStyleBackColor = true;
             // 
             // screenImage
             // 
@@ -90,15 +90,18 @@ namespace Celones.DisplayManager.Simulation
             // ControlPanel
             // 
             this.ClientSize = new System.Drawing.Size(192, 148);
-            this.Controls.Add(this.cButton);
-            this.Controls.Add(this.bButton);
-            this.Controls.Add(this.dButton);
-            this.Controls.Add(this.aButton);
             this.Controls.Add(this.screenImage);
+            this.Controls.Add(this.aButton);
+            this.Controls.Add(this.bButton);
+            this.Controls.Add(this.cButton);
+            this.Controls.Add(this.dButton);
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "ControlPanel";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Load += new System.EventHandler(this.ControlPanel_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ControlPanel_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ControlPanel_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.screenImage)).EndInit();
             this.ResumeLayout(false);
 
@@ -114,7 +117,41 @@ namespace Celones.DisplayManager.Simulation
 
         private void ControlPanel_Load(object sender, EventArgs e)
         {
+            foreach (Control control in this.Controls)
+            {
+                control.PreviewKeyDown += new PreviewKeyDownEventHandler(control_PreviewKeyDown);
+            }
             refresher.Start();
+        }
+
+        private void ControlPanel_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Left: aButton.Press(); break;
+                case Keys.Right: bButton.Press(); break;
+                case Keys.Down: cButton.Press(); break;
+                case Keys.Up: dButton.Press(); break;
+            }
+        }
+
+        private void ControlPanel_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Left: aButton.Release(); break;
+                case Keys.Right: bButton.Release(); break;
+                case Keys.Down: cButton.Release(); break;
+                case Keys.Up: dButton.Release(); break;
+            }
+        }
+
+        private void control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
+            {
+                e.IsInputKey = true;
+            }
         }
     }
 }
