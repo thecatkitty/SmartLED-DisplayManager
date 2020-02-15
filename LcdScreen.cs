@@ -13,7 +13,7 @@ namespace Celones.DisplayManager {
     private Bitmap _img;
     private Graphics _gc;
 
-    public LcdScreen(Device.Pcd8544 controller, GpioPin backlight) {
+    public LcdScreen(Device.Pcd8544 controller, GpioPin backlight = null) {
       _ctl = controller;
       _bl = backlight;
       
@@ -24,9 +24,12 @@ namespace Celones.DisplayManager {
     public void Init() {
       _ctl.Init();
 
-      _bl.PinMode = GpioPinDriveMode.PwmOutput;
-      _bl.PwmMode = PwmMode.Balanced;
-      _bl.PwmClockDivisor = 2;
+      if (_bl != null)
+      {
+        _bl.PinMode = GpioPinDriveMode.PwmOutput;
+        _bl.PwmMode = PwmMode.Balanced;
+        _bl.PwmClockDivisor = 2;
+      }
 
       Brightness = 1.0;
       Contrast = 1.0;
@@ -50,8 +53,11 @@ namespace Celones.DisplayManager {
     {
         get { return _brightness; }
         set {
-          _brightness = Math.Min(Math.Max(value, 0.0), 1.0);
-          _bl.PwmRegister = (int)(_brightness * _bl.PwmRange);
+            if (_bl != null)
+            {
+                _brightness = Math.Min(Math.Max(value, 0.0), 1.0);
+                _bl.PwmRegister = (int)(_brightness * _bl.PwmRange);
+            }
         }
     }
 
