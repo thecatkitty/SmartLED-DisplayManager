@@ -8,7 +8,7 @@ namespace Celones.ONUI {
   class UI {
     private ONUI.Page _root;
 
-    public LcdScreen Lcd {get; set;}
+    public ICanvas Display {get; set;}
     public Button OkButton {get; set;}
     public Button BackButton {get; set;}
     public Button DownButton {get; set;}
@@ -20,13 +20,13 @@ namespace Celones.ONUI {
     }
 
     public void Show() {
-      Lcd.Clear();
-      Lcd.Graphics.Clear(Color.White);
+      Display.Clear();
+      Display.Graphics.Clear(Color.White);
       var brush = new SolidBrush(Color.Black);
       var font = new Font("Tahoma", 8, FontStyle.Bold);
       var format = new StringFormat(StringFormat.GenericDefault);
       format.Alignment = StringAlignment.Center;
-      Lcd.Graphics.DrawString(Root.Header, font, brush, new RectangleF(0, -2, Lcd.Width, 12), format);
+      Display.Graphics.DrawString(Root.Header, font, brush, new RectangleF(0, -2, Display.Width, 12), format);
 
       foreach (var item in Root.Items) {
         if (item is ONUI.Menu) {
@@ -38,9 +38,9 @@ namespace Celones.ONUI {
       }
 
       foreach (var item in Root.Items) {
-        item.OnRender(Lcd.Graphics);
+        item.OnRender(Display.Graphics);
       }
-      Lcd.Update();
+      Display.Update();
     }
   }
 }

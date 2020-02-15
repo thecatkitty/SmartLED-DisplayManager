@@ -105,7 +105,7 @@ namespace Celones.DisplayManager
 
             // Menu demo
             var ui = new ONUI.UI(AssemblyDirectory + "/Assets/MainMenu.xaml");
-            ui.Lcd = Lcd;
+            ui.Display = Lcd;
             ui.BackButton = ButtonA;
             ui.OkButton = ButtonB;
             ui.DownButton = ButtonC;

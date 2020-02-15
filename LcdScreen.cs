@@ -11,14 +11,13 @@ namespace Celones.DisplayManager {
     private double _brightness, _contrast;
 
     private Bitmap _img;
-    private Graphics _gc;
 
     public LcdScreen(Device.Pcd8544 controller, GpioPin backlight = null) {
       _ctl = controller;
       _bl = backlight;
       
       _img = new Bitmap(Width, Height);
-      _gc = Graphics.FromImage(_img);
+      Graphics = Graphics.FromImage(_img);
     }
 
     public void Init() {
@@ -45,6 +44,8 @@ namespace Celones.DisplayManager {
         }
       }
     }
+
+    public Graphics Graphics { get; }
 
     public int Width { get => _ctl.DramSizeX; }
     public int Height { get => _ctl.DramSizeY * 8; }
@@ -97,10 +98,6 @@ namespace Celones.DisplayManager {
           _ctl.Write((byte)data);
         }
       }
-    }
-
-    public Graphics Graphics {
-      get => _gc;
     }
   }
 }
