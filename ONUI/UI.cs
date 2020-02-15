@@ -9,10 +9,10 @@ namespace Celones.ONUI {
     private ONUI.Page _root;
 
     public ICanvas Display {get; set;}
-    public Button OkButton {get; set;}
-    public Button BackButton {get; set;}
-    public Button DownButton {get; set;}
-    public Button UpButton {get; set;}
+    public IHardwareButton OkButton {get; set;}
+    public IHardwareButton BackButton {get; set;}
+    public IHardwareButton DownButton {get; set;}
+    public IHardwareButton UpButton {get; set;}
     public ONUI.Page Root { get => _root; }
 
     public UI(string file) {

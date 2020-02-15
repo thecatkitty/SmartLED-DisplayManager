@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Threading;
 using Unosquare.RaspberryIO;
-using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi;
 
 namespace Celones.DisplayManager
@@ -11,7 +10,7 @@ namespace Celones.DisplayManager
     class Program
     {
         static LcdScreen Lcd;
-        static Unosquare.RaspberryIO.Peripherals.Button ButtonA, ButtonB, ButtonC, ButtonD;
+        static ONUI.IHardwareButton ButtonA, ButtonB, ButtonC, ButtonD;
 
         static Color ClearColor;
 
@@ -47,10 +46,10 @@ namespace Celones.DisplayManager
                 Console.WriteLine(Pi.Info.ToString());
 
                 Lcd = new LcdScreen(new Device.Pcd8544(Pi.Spi.Channel0, Pins.LcdReset, Pins.LcdDc), (GpioPin)Pins.LcdBacklight);
-                ButtonA = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonA, GpioPinResistorPullMode.PullUp);
-                ButtonB = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonB, GpioPinResistorPullMode.PullUp);
-                ButtonC = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonC, GpioPinResistorPullMode.PullUp);
-                ButtonD = new Unosquare.RaspberryIO.Peripherals.Button(Pins.ButtonD, GpioPinResistorPullMode.PullUp);
+                ButtonA = new Button(Pins.ButtonA);
+                ButtonB = new Button(Pins.ButtonB);
+                ButtonC = new Button(Pins.ButtonC);
+                ButtonD = new Button(Pins.ButtonD);
             }
 
             Lcd.Init();
